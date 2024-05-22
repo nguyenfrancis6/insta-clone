@@ -10,6 +10,8 @@ import {
 import { AiFillHome } from "react-icons/ai";
 import { BiLogOut } from "react-icons/bi";
 import useLogout from "../../hooks/useLogout";
+import useAuthStore from "../../store/authStore";
+
 
 const Sidebar = () => {
   const sidebarItems = [
@@ -39,6 +41,8 @@ const Sidebar = () => {
   ];
 
   const { handleLogout, isLoggingOut } = useLogout();
+  const authUser = useAuthStore((state) => state.user)
+
   return (
     <Box
       height={"100vh"}
@@ -87,7 +91,7 @@ const Sidebar = () => {
             >
               <Link
                 display={"flex"}
-                to={item.link || null}
+                to={`/${authUser?.username}`}
                 as={RouterLink}
                 alignItems={"center"}
                 gap={4}
