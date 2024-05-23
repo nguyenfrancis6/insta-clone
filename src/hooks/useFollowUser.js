@@ -3,13 +3,13 @@ import { useEffect, useState } from "react";
 import useUserProfileStore from "../store/userProfileStore";
 import useShowToast from "./useShowToast";
 import { db } from "../firebase/firebase";
-import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore"
+import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 
 const useFollowUser = (userId) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
-  const authUser = useAuthStore((state) => state.user)
-  const setAuthUser = useAuthStore((state) => state.setUser)
+  const authUser = useAuthStore((state) => state.user);
+  const setAuthUser = useAuthStore((state) => state.setUser);
   const { userProfile, setUserProfile } = useUserProfileStore();
   const showToast = useShowToast();
 
@@ -38,12 +38,13 @@ const useFollowUser = (userId) => {
           ...authUser,
           following: authUser.following.filter((uid) => uid !== userId),
         });
-        setUserProfile({
-          ...userProfile,
-          followers: userProfile.followers.filter(
-            (uid) => uid !== authUser.uid
-          ),
-        });
+        if (userProfile)
+          setUserProfile({
+            ...userProfile,
+            followers: userProfile.followers.filter(
+              (uid) => uid !== authUser.uid
+            ),
+          });
 
         localStorage.setItem(
           "user-info",
@@ -59,10 +60,11 @@ const useFollowUser = (userId) => {
           ...authUser,
           following: [...authUser.following, userId],
         });
-        setUserProfile({
-          ...userProfile,
-          followers: [...userProfile.followers, userId],
-        });
+        if (userProfile)
+          setUserProfile({
+            ...userProfile,
+            followers: [...userProfile.followers, userId],
+          });
 
         localStorage.setItem(
           "user-info",
@@ -76,7 +78,7 @@ const useFollowUser = (userId) => {
       }
     } catch (error) {
       showToast("Error", error.message, "error");
-      console.log(error)
+      console.log(error);
     } finally {
       setIsUpdating(false);
     }

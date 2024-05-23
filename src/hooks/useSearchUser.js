@@ -11,6 +11,7 @@ const useSearchUser = () => {
   const getUserProfile = async (username) => {
     // find user in database
     setIsLoading(true)
+    setUser(null)
     try {
       const q = query(
         collection(db, "users"),
