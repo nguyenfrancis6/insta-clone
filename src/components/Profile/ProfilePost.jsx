@@ -33,35 +33,34 @@ import { useState } from "react";
 const ProfilePost = ({ post }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const userProfile = useUserProfileStore((state) => state.userProfile);
-  const authUser = useAuthStore((state) => state.user)
-  const showToast = useShowToast()
-  const [isDeleting, setIsDeleting] = useState(false)
-  const deletePost = usePostStore(state => state.deletePost)
-  const deletePostFromProfile = useUserProfileStore((state) => state.deletePost)
+  const authUser = useAuthStore((state) => state.user);
+  const showToast = useShowToast();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const deletePost = usePostStore((state) => state.deletePost);
+  const decrementPostCount = useUserProfileStore((state) => state.deletePost);
 
   const handleDeletePost = async () => {
-    if(!window.confirm("Are you sure you want to delete this post?")) return;
+    if (!window.confirm("Are you sure you want to delete this post?")) return;
     if (isDeleting) return;
 
     try {
       const imageRef = ref(storage, `posts/${post.id}`);
-      await deleteObject(imageRef)
-      const userRef = doc(db, "users", authUser.uid)
-      await deleteDoc(doc(db, "posts", post.id))
+      await deleteObject(imageRef);
+      const userRef = doc(db, "users", authUser.uid);
+      await deleteDoc(doc(db, "posts", post.id));
       await updateDoc(userRef, {
-        posts: arrayRemove(post.id)
-      })
+        posts: arrayRemove(post.id),
+      });
 
-      deletePost(post.id)
-      deletePostFromProfile(post.id)
-      showToast("Success", "Post deleted successfully", "success")
-
-    } catch (error){
-      showToast("Error", error.message, "error")
+      deletePost(post.id);
+      decrementPostCount(post.id);
+      showToast("Success", "Post deleted successfully", "success");
+    } catch (error) {
+      showToast("Error", error.message, "error");
     } finally {
-      setIsDeleting(false)
+      setIsDeleting(false);
     }
-  }
+  };
   return (
     <>
       <GridItem
@@ -179,21 +178,12 @@ const ProfilePost = ({ post }) => {
                   maxH={"350px"}
                   overflowY={"auto"}
                 >
-                  <Comment
-                    createdAt="1d ago"
-                    username="Francis"
-                    profilePic="/profilepic.png"
-                    text={"Dummy images from unsplash"}
-                  />
-                  <Comment
-                    createdAt="12h ago"
-                    username="abrahmov"
-                    profilePic="https://bit.ly/dan-abramov"
-                    text={"Nice pic"}
-                  />
+                  {post.comments.map((comment) => (
+                    <Comment key={comment.id} comment={comment} />
+                  ))}
                 </VStack>
                 <Divider my={4} bg={"gray.500"} />
-                <PostFooter isProfilePage={true} />
+                <PostFooter isProfilePage={true} post={post} />
               </Flex>
             </Flex>
           </ModalBody>
