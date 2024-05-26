@@ -15,6 +15,7 @@ import {
 } from "../../assets/constants";
 import usePostComment from "../../hooks/usePostComment";
 import useAuthStore from "../../store/authStore";
+import { useRef } from "react";
 
 const PostFooter = ({ post, username, isProfilePage }) => {
   const [liked, setLiked] = useState(false);
@@ -22,6 +23,7 @@ const PostFooter = ({ post, username, isProfilePage }) => {
   const { isCommenting, handlePostComment } = usePostComment();
   const [comment, setComment] = useState("");
   const authUser = useAuthStore();
+  const commentRef = useRef(null);
 
   const handleSubmitComment = async () => {
     await handlePostComment(post.id, comment);
@@ -29,13 +31,7 @@ const PostFooter = ({ post, username, isProfilePage }) => {
   };
 
   const handleLike = () => {
-    if (liked) {
-      setLiked(false);
-      setLikes(likes - 1);
-    } else {
-      setLiked(true);
-      setLikes(likes + 1);
-    }
+
   };
 
   return (
@@ -45,7 +41,7 @@ const PostFooter = ({ post, username, isProfilePage }) => {
           {!liked ? <NotificationsLogo /> : <UnlikeLogo />}
         </Box>
 
-        <Box cursor={"pointer"} fontSize={18}>
+        <Box cursor={"pointer"} fontSize={18} onClick={() => commentRef.current.focus()}>
           <CommentLogo />
         </Box>
       </Flex>
@@ -79,6 +75,7 @@ const PostFooter = ({ post, username, isProfilePage }) => {
               fontSize={14}
               onChange={(e) => setComment(e.target.value)}
               value={comment}
+              ref={commentRef}
             />
             <InputRightElement>
               <Button
