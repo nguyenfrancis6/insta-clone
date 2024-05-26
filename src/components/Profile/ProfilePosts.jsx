@@ -4,10 +4,10 @@ import ProfilePost from "./ProfilePost";
 import useGetUserPosts from "../../hooks/useGetUserPosts";
 
 const ProfilePosts = () => {
-  const {isLoading, posts} = useGetUserPosts()
+  const { isLoading, posts } = useGetUserPosts();
   const noPostsFound = !isLoading && posts.length === 0;
-  if (noPostsFound) return <NoPostsFound />
-  console.log(posts)
+  if (noPostsFound) return <NoPostsFound />;
+  console.log(posts);
   return (
     <Grid
       templateColumns={{ sm: "repeat(1, 1fr)", md: "repeat(3, 1fr)" }}
@@ -37,9 +37,9 @@ const ProfilePosts = () => {
 export default ProfilePosts;
 
 const NoPostsFound = () => {
-	return (
-		<Flex flexDir='column' textAlign={"center"} mx={"auto"} mt={10}>
-			<Text fontSize={"2xl"}>No Posts Found🤔</Text>
-		</Flex>
-	);
+  return (
+    <Flex flexDir="column" textAlign={"center"} mx={"auto"} mt={10}>
+      <Text fontSize={"2xl"}>No Posts Found🤔</Text>
+    </Flex>
+  );
 };

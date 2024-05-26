@@ -26,7 +26,7 @@ const ProfileLink = () => {
 				w={{ base: 10, md: "full" }}
 				justifyContent={{ base: "center", md: "flex-start" }}
 			>
-				<Avatar size={"sm"} src={authUser?.profilePicURL || ""} />
+				<Avatar size={{base: "sm", sm: "xs"}} src={authUser?.profilePicURL || ""} />
 				<Box display={{ base: "none", md: "block" }}>Profile</Box>
 			</Link>
 		</Tooltip>
