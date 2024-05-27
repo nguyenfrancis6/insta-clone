@@ -178,6 +178,7 @@ const ProfilePost = ({ post }) => {
                   alignItems={"start"}
                   maxH={"350px"}
                   overflowY={"auto"}
+                  h={"100%"}
                 >
                   {/* caption */}
                   {post.caption && <Caption post={post} /> } 
