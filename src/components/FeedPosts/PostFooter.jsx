@@ -17,20 +17,19 @@ import usePostComment from "../../hooks/usePostComment";
 import useAuthStore from "../../store/authStore";
 import { useRef } from "react";
 import useLikePost from "../../hooks/useLikePost";
+import { timeAgo } from "../../utils/timeAgo";
 
-const PostFooter = ({ post, username, isProfilePage }) => {
+const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
   const { isCommenting, handlePostComment } = usePostComment();
   const [comment, setComment] = useState("");
   const authUser = useAuthStore();
   const commentRef = useRef(null);
-  const {handleLikePost, isLiked, likes} = useLikePost(post)
+  const { handleLikePost, isLiked, likes } = useLikePost(post);
 
   const handleSubmitComment = async () => {
     await handlePostComment(post.id, comment);
     setComment("");
   };
-
-
 
   return (
     <Box mb={10} marginTop={"auto"}>
@@ -39,24 +38,35 @@ const PostFooter = ({ post, username, isProfilePage }) => {
           {!isLiked ? <NotificationsLogo /> : <UnlikeLogo />}
         </Box>
 
-        <Box cursor={"pointer"} fontSize={18} onClick={() => commentRef.current.focus()}>
+        <Box
+          cursor={"pointer"}
+          fontSize={18}
+          onClick={() => commentRef.current.focus()}
+        >
           <CommentLogo />
         </Box>
       </Flex>
       <Text fontWeight={600} fontSize={"sm"}>
         {likes} likes
       </Text>
+      {isProfilePage && (
+        <Text fontSize={12} color={"gray"}>
+          Posted {timeAgo(post.createdAt)}
+        </Text>
+      )}
       {!isProfilePage && (
         <>
           <Text fontSize="sm" fontWeight={700}>
-            {username}{" "}
+            {creatorProfile?.username}{" "}
             <Text fontWeight={400} as="span">
-              Feeling good
+              {post.caption}
             </Text>
           </Text>
-          <Text color={"gray"} fontSize={"sm"}>
-            View all 1,000 comments
-          </Text>
+          {post.comments.length > 0 && (
+            <Text color={"gray"} fontSize={"sm"} cursor={"pointer"}>
+              View all {post.comments.length} comments
+            </Text>
+          )}
         </>
       )}
       {authUser && (
