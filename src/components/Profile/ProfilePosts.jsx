@@ -7,7 +7,6 @@ const ProfilePosts = () => {
   const { isLoading, posts } = useGetUserPosts();
   const noPostsFound = !isLoading && posts.length === 0;
   if (noPostsFound) return <NoPostsFound />;
-  console.log(posts);
   return (
     <Grid
       templateColumns={{ sm: "repeat(1, 1fr)", md: "repeat(3, 1fr)" }}

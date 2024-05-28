@@ -146,8 +146,9 @@ function useCreatePost() {
   const authUser = useAuthStore((state) => state.user);
   const createPost = usePostStore((state) => state.createPost);
   const addPost = useUserProfileStore((state) => state.addPost);
+  const userProfile = useUserProfileStore((state) => state.userProfile);
   const { pathname } = useLocation();
-  const userProfile = useUserProfileStore((state) => state.addPost);
+  
 
   const handleCreatePost = async (selectedFile, caption) => {
     if (!selectedFile) throw new Error("Please select an image");
