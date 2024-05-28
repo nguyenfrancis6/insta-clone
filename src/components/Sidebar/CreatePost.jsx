@@ -147,12 +147,16 @@ function useCreatePost() {
   const createPost = usePostStore((state) => state.createPost);
   const addPost = useUserProfileStore((state) => state.addPost);
   const { pathname } = useLocation();
+  const userProfile = useUserProfileStore((state) => state.addPost);
 
   const handleCreatePost = async (selectedFile, caption) => {
     if (!selectedFile) throw new Error("Please select an image");
     setIsLoading(true);
+
+    const validCaption = caption ? caption : ''
+
     const newPost = {
-      caption: caption,
+      caption: validCaption,
       likes: [],
       comments: [],
       createdAt: Date.now(),
@@ -160,7 +164,7 @@ function useCreatePost() {
     };
 
     try {
-      const postDocRef = await addDoc(collection(db, "posts"), newPost);
+      const postDocRef = await addDoc(collection(db, "posts"), newPost)
       const userDocRef = doc(db, "users", authUser.uid);
       const imageRef = ref(storage, `posts/${postDocRef.id}`);
 
@@ -175,11 +179,15 @@ function useCreatePost() {
 
       // add image url to new post
       newPost.imageURL = downloadURL;
-      createPost({ ...newPost, id: postDocRef.id });
-      addPost({ ...newPost, id: postDocRef.id });
+      if (userProfile.uid === authUser.uid)
+        createPost({ ...newPost, id: postDocRef.id });
+
+      if (pathname !== "/" && userProfile.uid === authUser.uid)
+        addPost({ ...newPost, id: postDocRef.id });
       showToast("Success", "Post created successfully", "success");
     } catch (error) {
       showToast("Error", error.message, "error");
+      console.log(error)
     } finally {
       setIsLoading(false);
     }

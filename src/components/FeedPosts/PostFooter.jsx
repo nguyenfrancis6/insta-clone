@@ -6,6 +6,7 @@ import {
   InputRightElement,
   Input,
   Button,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import {
@@ -18,6 +19,7 @@ import useAuthStore from "../../store/authStore";
 import { useRef } from "react";
 import useLikePost from "../../hooks/useLikePost";
 import { timeAgo } from "../../utils/timeAgo";
+import CommentsModal from "../Modals/CommentsModal";
 
 const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
   const { isCommenting, handlePostComment } = usePostComment();
@@ -25,6 +27,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
   const authUser = useAuthStore();
   const commentRef = useRef(null);
   const { handleLikePost, isLiked, likes } = useLikePost(post);
+  const {isOpen, onOpen, onClose} = useDisclosure();
 
   const handleSubmitComment = async () => {
     await handlePostComment(post.id, comment);
@@ -63,10 +66,12 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
             </Text>
           </Text>
           {post.comments.length > 0 && (
-            <Text color={"gray"} fontSize={"sm"} cursor={"pointer"}>
+            <Text color={"gray"} fontSize={"sm"} cursor={"pointer"} onClick={onOpen}>
               View all {post.comments.length} comments
             </Text>
           )}
+          {/* comments modal only in home page */}
+          {isOpen ? <CommentsModal isOpen={isOpen} onClose={onClose} post={post} /> : null}
         </>
       )}
       {authUser && (
