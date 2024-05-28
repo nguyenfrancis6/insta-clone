@@ -32,50 +32,27 @@ const useFollowUser = (userId) => {
       });
 
       //update state and local storage
-      if (isFollowing) {
-        // unfollow
-        setAuthUser({
-          ...authUser,
-          following: authUser.following.filter((uid) => uid !== userId),
-        });
-        if (userProfile)
-          setUserProfile({
+      const updatedAuthUser = {
+        ...authUser,
+        following: isFollowing
+          ? authUser.following.filter((uid) => uid !== userId)
+          : [...authUser.following, userId],
+      };
+
+      const updatedUserProfile = userProfile
+        ? {
             ...userProfile,
-            followers: userProfile.followers.filter(
-              (uid) => uid !== authUser.uid
-            ),
-          });
+            followers: isFollowing
+              ? userProfile.followers.filter((uid) => uid !== authUser.uid)
+              : [...userProfile.followers, authUser.uid],
+          }
+        : null;
 
-        localStorage.setItem(
-          "user-info",
-          JSON.stringify({
-            ...authUser,
-            following: authUser.following.filter((uid) => uid !== userId),
-          })
-        );
-        setIsFollowing(false);
-      } else {
-        //follow
-        setAuthUser({
-          ...authUser,
-          following: [...authUser.following, userId],
-        });
-        if (userProfile)
-          setUserProfile({
-            ...userProfile,
-            followers: [...userProfile.followers, userId],
-          });
+      setAuthUser(updatedAuthUser);
+      if (userProfile) setUserProfile(updatedUserProfile);
 
-        localStorage.setItem(
-          "user-info",
-          JSON.stringify({
-            ...authUser,
-            following: [...authUser.following, userId],
-          })
-        );
-
-        setIsFollowing(true);
-      }
+      localStorage.setItem("user-info", JSON.stringify(updatedAuthUser));
+      setIsFollowing(!isFollowing);
     } catch (error) {
       showToast("Error", error.message, "error");
       console.log(error);
