@@ -76,7 +76,7 @@ const Search = () => {
                 </Button>
               </Flex>
             </form>
-            {user && <SuggestedUser user={user} setUser={setUser} />}
+            {user && <SuggestedUser user={user} setUser={setUser} onClose={onClose}/>}
           </ModalBody>
         </ModalContent>
       </Modal>

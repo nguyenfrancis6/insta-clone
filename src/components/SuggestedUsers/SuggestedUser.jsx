@@ -3,7 +3,7 @@ import useFollowUser from "../../hooks/useFollowUser";
 import useAuthStore from "../../store/authStore";
 import { Link } from "react-router-dom";
 
-const SuggestedUser = ({ user, setUser }) => {
+const SuggestedUser = ({ user, setUser, onClose }) => {
   const { isFollowing, isUpdating, handleFollowUser } = useFollowUser(user.uid);
   const authUser = useAuthStore((state) => state.user);
 
@@ -21,11 +21,11 @@ const SuggestedUser = ({ user, setUser }) => {
   return (
     <Flex justifyContent={"space-between"} alignItems={"center"} w={"full"}>
       <Flex alignItems={"center"} gap={2}>
-        <Link to={`/${user.username}`}>
+        <Link to={`/${user.username}`} onClick={onClose}>
           <Avatar src={user.profilePicURL} size={"md"} />
         </Link>
         <VStack spacing={2} alignItems={"flex-start"}>
-          <Link to={`/${user.username}`}>
+          <Link to={`/${user.username}`} onClick={onClose}>
             <Box fontSize={12} fontWeight={"bold"}>
               {user.fullName}
             </Box>
